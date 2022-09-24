@@ -1,0 +1,27 @@
+.add-box {
+  display: flex;
+  flex-direction: row;
+  background-color: #e3e9ff;
+  width: 350px;
+  height: 40px;
+  align-items: center;
+  border-radius: 5px;
+  justify-content: space-evenly;
+}
+
+input {
+  width: 80%;
+  border-color: #967dee;
+  border-radius: 4px;
+  height: 30px;
+}
+
+button {
+  border-radius: 4px;
+  height: 30px;
+  border: none;
+  color: white;
+  background-color: #4711de;
+  width: 15%;
+
+}

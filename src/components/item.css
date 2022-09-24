@@ -1,0 +1,32 @@
+.item {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 7px;
+  background-color: #e3e9ff;
+  width: 350px;
+  height: 40px;
+  align-items: center;
+  border-radius: 5px;
+}
+
+.item-text {
+  width: 75%;
+  margin-left: 10px;
+}
+
+.end {
+  color: #689ED4;
+  cursor: pointer;
+}
+
+.norm {
+  color: #4813de;
+  cursor: pointer;
+
+}
+
+.delete {
+  color: red;
+  cursor: pointer;
+
+}
