@@ -1,0 +1,3 @@
+new list item goes to the top when window refreshed
+
+all list items with the same text get deleted, this can get really messy

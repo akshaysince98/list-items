@@ -29,7 +29,7 @@ function App() {
 
   const priorityChange = async (x, text) => {
     let ntexts = texts.slice()
-    console.log(ntexts)
+    // console.log(ntexts)
     let idx = texts.findIndex((t) => t == text)
     if (x == -1 && idx == 0) {
       return
@@ -45,16 +45,16 @@ function App() {
         text: ntexts[key],
         priority: key
       })
-      console.log("doc updated")
+      // console.log("doc updated")
     }
     setTexts(ntexts)
-    console.log(texts)
+    // console.log(texts)
 
   }
 
   const deleteText = async (text) => {
     let ntexts = texts.filter((t) => t != text)
-    console.log(ntexts)
+    // console.log(ntexts)
     await deleteDoc(doc(db, "items", String(texts.length - 1)));
     for (let key in ntexts) {
 
@@ -62,7 +62,7 @@ function App() {
         text: ntexts[key],
         priority: key
       })
-      console.log("doc updated")
+      // console.log("doc updated")
     }
     setPriority(ntexts.length)
     setTexts(ntexts)
@@ -72,7 +72,7 @@ function App() {
     let ntexts = texts.slice()
 
     ntexts.push(text)
-    console.log(ntexts)
+    // console.log(ntexts)
     setPriority(ntexts.length)
     setTexts(ntexts)
   }
@@ -91,7 +91,3 @@ function App() {
 }
 
 export default App;
-
-
-
-// TODO: Might have to use redux for the list items, because data needs to be dynamic
