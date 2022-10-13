@@ -25,7 +25,7 @@ function App() {
       setTexts(arr)
       setLoading(false)
     })();
-  }, [loading])
+  }, [])
 
   const priorityChange = async (x, text) => {
     let ntexts = texts.slice()

@@ -11,7 +11,7 @@ function Addlist(props) {
   // console.log(props.priority)
 
   const addItem = async () => {
-
+    console.log(props.priority)
     if (!lii) {
       setError("Empty field not allowed");
       setTimeout(() => {

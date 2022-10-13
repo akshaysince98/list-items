@@ -9,6 +9,11 @@
   border-radius: 5px;
 }
 
+.item:hover{
+  background-color: #829aef;
+  transform: scale(1.05);
+}
+
 .item-text {
   width: 75%;
   margin-left: 10px;

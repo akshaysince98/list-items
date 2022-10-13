@@ -1,6 +1,5 @@
 .add-box {
   display: flex;
-  flex-direction: row;
   background-color: #e3e9ff;
   width: 350px;
   height: 40px;
