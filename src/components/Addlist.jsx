@@ -23,9 +23,9 @@ function Addlist(props) {
       props.addText(lii)
       await setDoc(doc(db, "items", String(props.priority)), {
         text: lii,
-        priority: props.priority
+        priority: props.priority,
+        pinned: false
       })
-
 
     } catch (err) {
       setError(err.message);
@@ -35,7 +35,6 @@ function Addlist(props) {
     }
     setLii('');
   }
-
 
   return (
     <>

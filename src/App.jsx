@@ -8,29 +8,35 @@ import { useEffect, useState } from 'react';
 function App() {
 
   const [texts, setTexts] = useState([])
+  const [textsName, setTextsName] = useState([])
+  const [extraTexts, setExtraTexts] = useState([])
   const [loading, setLoading] = useState(true)
   const [priority, setPriority] = useState(0)
 
 
   useEffect(() => {
     (async () => {
+      console.log("running")
       let arr = []
+      let narr = []
       const q = query(collection(db, "items"), orderBy("priority"));
       const querySnapshot = await getDocs(q);
       querySnapshot.forEach((t) => {
-        arr.push(t.data().text)
-        // console.log(t.id);
+        arr.push(t.data())
+        narr.push(t.data().text)
       })
       setPriority(arr.length)
       setTexts(arr)
+      setExtraTexts(arr)
+      setTextsName(narr)
       setLoading(false)
     })();
-  }, [])
+  }, [loading])
 
-  const priorityChange = async (x, text) => {
+  const priorityChange = async (x, textname) => {
     let ntexts = texts.slice()
     // console.log(ntexts)
-    let idx = texts.findIndex((t) => t == text)
+    let idx = texts.findIndex((t) => t.text == textname)
     if (x == -1 && idx == 0) {
       return
     }
@@ -42,39 +48,120 @@ function App() {
     for (let key in ntexts) {
 
       await setDoc(doc(db, "items", String(key)), {
-        text: ntexts[key],
-        priority: key
+        text: ntexts[key].text,
+        priority: key,
+        pinned: ntexts[key].pinned
       })
-      // console.log("doc updated")
     }
+
+    console.log(ntexts)
     setTexts(ntexts)
+    setExtraTexts(ntexts)
+
+    let namentexts = ntexts.map((n) => n.text)
+    setTextsName(namentexts)
     // console.log(texts)
 
   }
 
-  const deleteText = async (text) => {
-    let ntexts = texts.filter((t) => t != text)
-    // console.log(ntexts)
+  const deleteText = async (textname) => {
+    let ntexts = texts.filter((t) => t.text != textname)
+
     await deleteDoc(doc(db, "items", String(texts.length - 1)));
     for (let key in ntexts) {
 
       await setDoc(doc(db, "items", String(key)), {
-        text: ntexts[key],
-        priority: key
+        text: ntexts[key].text,
+        priority: key,
+        pinned: ntexts[key].pinned
       })
-      // console.log("doc updated")
     }
+
     setPriority(ntexts.length)
     setTexts(ntexts)
+    setExtraTexts(ntexts)
+
+    let namentexts = ntexts.map((n) => n.text)
+    setTextsName(namentexts)
   }
 
-  const addText = (text) => {
+  const pinunpinmain = async (p, textname) => {
+    setLoading(true)
     let ntexts = texts.slice()
+    let idx = texts.findIndex((t) => t.text == textname)
+    ntexts[idx].pinned = p
 
-    ntexts.push(text)
-    // console.log(ntexts)
+    for (let key in ntexts) {
+      await setDoc(doc(db, "items", String(key)), {
+        text: ntexts[key].text,
+        priority: key,
+        pinned: ntexts[key].pinned
+      })
+    }
+    setTexts(ntexts)
+    setExtraTexts(ntexts)
+
+    let ntextname = ntexts.map((t) => t.text)
+    setTextsName(ntextname)
+
+    if (p) {
+      pinhelper()
+    } else {
+      unpinhelper()
+    }
+
+    setLoading(false)
+  }
+
+  const unpinhelper = () => {
+    setExtraTexts(texts)
+    let nametexts = texts.map((t) => t.text)
+    setTextsName(nametexts)
+  }
+
+
+  const pinhelper = () => {
+    let ntextname = textsName.slice()
+    console.log(textsName)
+    let idxarr = []
+    let textarr = []
+    texts.forEach((t, i) => {
+      if (t.pinned == true) {
+        idxarr.push(i)
+        textarr.push(t.text)
+      }
+    })
+
+    for (let i = 0; i < textarr.length; i++) {
+      ntextname = ntextname.filter((t) => {
+        return t != textarr[i]
+      })
+    }
+
+    for (let i = 0; i < textarr.length; i++) {
+      ntextname.unshift(textarr[i])
+    }
+
+    let netext = ntextname.map((t) => {
+
+      let ei = extraTexts.findIndex((e) => e.text == t)
+
+      return extraTexts[ei]
+    })
+
+    setExtraTexts(netext)
+    setTextsName(ntextname)
+  }
+
+  const addText = (textobj) => {
+    let ntexts = texts.slice()
+    ntexts.push(textobj)
     setPriority(ntexts.length)
     setTexts(ntexts)
+    setExtraTexts(ntexts)
+
+    let namentexts = ntexts.map((n) => n.text)
+    setTextsName(namentexts)
   }
 
   return (
@@ -82,7 +169,7 @@ function App() {
       <div className='general'>
         {
           loading ? <div>loading...</div> :
-            texts.map((t, i, arr) => <Listitems key={i} t={t} i={i} length={arr.length} priorityChange={priorityChange} deleteText={deleteText} />)
+            textsName.map((t, i, arr) => <Listitems key={i} t={t} i={i} tobj={extraTexts[i]} length={arr.length} priorityChange={priorityChange} deleteText={deleteText} pinunpinmain={pinunpinmain} />)
         }
         <Addlist priority={priority} addText={addText} />
       </div>
